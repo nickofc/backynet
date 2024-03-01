@@ -1,4 +1,5 @@
 using Backynet.Core;
+using Backynet.Core.Abstraction;
 using WorkerService1;
 
 var builder = Host.CreateApplicationBuilder(args);

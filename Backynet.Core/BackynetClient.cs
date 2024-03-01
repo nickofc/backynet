@@ -1,30 +1,26 @@
 using System.Linq.Expressions;
+using Backynet.Core.Abstraction;
 
 namespace Backynet.Core;
 
-public class BackynetClient : IBackynetClient
+internal sealed class BackynetClient : IBackynetClient
 {
-    public Task<string> EnqueueAsync(Expression<Func<Task>> call)
+    private readonly IStorage _storage;
+
+    public async Task<string> EnqueueAsync(Expression<Func<Task>> call, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var job = new Job
+        {
+            Id = Guid.NewGuid(),
+            JobState = JobState.Created,
+            CreatedAt = DateTimeOffset.UtcNow
+        };
+
+        await _storage.Add(job, cancellationToken);
+        return job.Id.ToString();
     }
 
-    public Task<string> EnqueueAsync(Expression<Action> call)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<string> ContinueWithAsync(string jobId, Expression<Func<Task>> call)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<string> ContinueWithAsync(string jobId, Expression<Action> call)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task DeleteAsync(string jobId)
+    public Task<string> EnqueueAsync(Expression<Action> call, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }

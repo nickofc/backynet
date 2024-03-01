@@ -7,11 +7,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backynet.Core", "Backynet.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backynet.AspNetCore", "Backynet.AspNetCore\Backynet.AspNetCore.csproj", "{E93AD1A4-B7F6-48CD-995E-42623B43B16C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkerService1", "WorkerService1\WorkerService1.csproj", "{A0AE8729-F92C-4FC9-8FB2-3D9E052F2DE5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkerService1", "example\WorkerService1\WorkerService1.csproj", "{A0AE8729-F92C-4FC9-8FB2-3D9E052F2DE5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backynet.Postgresql", "Backynet.Postgresql\Backynet.Postgresql.csproj", "{6477B7E5-4BAC-48C3-82C0-F6D4DEEB3D4B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backynet.Tests", "Backynet.Tests\Backynet.Tests.csproj", "{3128E2F7-8613-44F8-B640-882A1F79D9AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backynet.Postgresql.Tests", "Backynet.Postgresql.Tests\Backynet.Postgresql.Tests.csproj", "{031ACB3A-92D4-4279-951E-4525C9CE905D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,5 +44,9 @@ Global
 		{3128E2F7-8613-44F8-B640-882A1F79D9AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3128E2F7-8613-44F8-B640-882A1F79D9AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3128E2F7-8613-44F8-B640-882A1F79D9AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{031ACB3A-92D4-4279-951E-4525C9CE905D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{031ACB3A-92D4-4279-951E-4525C9CE905D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{031ACB3A-92D4-4279-951E-4525C9CE905D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{031ACB3A-92D4-4279-951E-4525C9CE905D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

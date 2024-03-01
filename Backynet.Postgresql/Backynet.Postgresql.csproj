@@ -10,4 +10,19 @@
       <ProjectReference Include="..\Backynet.AspNetCore\Backynet.AspNetCore.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Npgsql" Version="8.0.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="migration.sql" />
+      <EmbeddedResource Include="migration.sql" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+            <_Parameter1>Backynet.Postgresql.Tests</_Parameter1>
+        </AssemblyAttribute>
+    </ItemGroup>
+    
 </Project>

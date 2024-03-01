@@ -12,7 +12,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Backynet.AspNetCore\Backynet.AspNetCore.csproj" />
-      <ProjectReference Include="..\Backynet.Postgresql\Backynet.Postgresql.csproj" />
+      <ProjectReference Include="..\..\Backynet.AspNetCore\Backynet.AspNetCore.csproj" />
+      <ProjectReference Include="..\..\Backynet.Core\Backynet.Core.csproj" />
+      <ProjectReference Include="..\..\Backynet.Postgresql\Backynet.Postgresql.csproj" />
     </ItemGroup>
+    
+    
 </Project>
