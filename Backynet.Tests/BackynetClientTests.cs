@@ -7,25 +7,19 @@ public class BackynetClientTests
     [Fact]
     public async Task Should_Execute_Job_When_Job_Was_Enqueued()
     {
-        var timeout = TimeSpan.FromSeconds(10);
+        using var timeout = new CancellationTokenSource();
+        timeout.CancelAfter(TimeSpan.FromSeconds(10));
 
         var backynetClient = new BackynetClient();
-        await backynetClient.EnqueueAsync(() => FakeClass.FakeSyncMethod());
+        await backynetClient.EnqueueAsync(() => FakeSyncMethod(), CancellationToken.None);
 
-        if (!FakeClass.WasExecuted.WaitOne(timeout))
-        {
-            Assert.Fail("Timeout");
-        }
+        WasExecuted.Wait(timeout.Token);
     }
 
-    private class FakeClass
-    {
-        public static readonly EventWaitHandle WasExecuted
-            = new ManualResetEvent(false);
+    private static readonly ManualResetEventSlim WasExecuted = new();
 
-        public static void FakeSyncMethod()
-        {
-            WasExecuted.Set();
-        }
+    private static void FakeSyncMethod()
+    {
+        WasExecuted.Set();
     }
 }

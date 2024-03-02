@@ -4,23 +4,23 @@ namespace Backynet.Core;
 
 internal class Invokable
 {
+    public string BaseType {get; }
     public string Method { get; }
     public IReadOnlyList<object> Arguments { get; }
-    public string ReturnType { get; }
 
-    public Invokable(string method, IReadOnlyList<object> arguments, string returnType)
+    public Invokable(string baseType, string method, IReadOnlyList<object> arguments)
     {
+        BaseType = baseType;
         Method = method;
         Arguments = arguments;
-        ReturnType = returnType;
     }
 
-    public static Invokable Create(Expression<Func<Task>> s)
+    public static Invokable GetFromExpression(Expression<Func<Task>> s)
     {
-        return Create((Expression) s);
+        return GetFromExpression((Expression)s);
     }
-    
-    public static Invokable Create(Expression expression)
+
+    public static Invokable GetFromExpression(Expression expression)
     {
         if (expression is not LambdaExpression lambdaExpression)
         {
@@ -41,7 +41,7 @@ internal class Invokable
 
         var args = ResolveArgs(methodCallExpression);
 
-        return new Invokable(method.Name, args, method.ReturnType.Name);
+        return new Invokable(method.DeclaringType.AssemblyQualifiedName, method.Name, args);
     }
 
     private static IReadOnlyList<object> ResolveArgs(MethodCallExpression body)
@@ -59,7 +59,7 @@ internal class Invokable
         return values;
     }
 
-    public static MemberExpression ResolveMemberExpression(Expression expression)
+    private static MemberExpression ResolveMemberExpression(Expression expression)
     {
         if (expression is MemberExpression)
         {
@@ -85,18 +85,12 @@ internal class Invokable
                 .GetField(exp.Member.Name)
                 .GetValue(((ConstantExpression)exp.Expression).Value);
         }
-        else if (exp.Expression is MemberExpression)
+
+        if (exp.Expression is MemberExpression)
         {
             return GetValue((MemberExpression)exp.Expression);
         }
-        else
-        {
-            throw new NotImplementedException();
-        }
-    }
 
-    public ValueTask Invoke()
-    {
-        return ValueTask.CompletedTask;
+        throw new NotImplementedException();
     }
 }
