@@ -3,15 +3,23 @@ using System.Xml;
 
 namespace Backynet.Core;
 
-public class ExpressionSerializer
+internal class ExpressionConverter
 {
-    public Stream Serialize(Expression expression)
+    public Stream Serialize(Expression call)
     {
-        return Stream.Null;
-    }
+        if (call is not LambdaExpression lambdaExpression)
+        {
+            throw null;
+        }
 
-    public Expression Deserialize(Stream stream)
-    {
-        return null;
-    } 
+        var args = new Dictionary<object, object>();
+        var method = "";
+
+        var parma = lambdaExpression.Body;
+
+
+        var test = parma as MethodCallExpression;
+        
+        throw new NotImplementedException();
+    }
 }

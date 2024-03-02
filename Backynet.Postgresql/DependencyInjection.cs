@@ -7,7 +7,7 @@ public static class DependencyInjection
 {
     public static BackynetConfigurationBuilder UsePostgreSql(
         this BackynetConfigurationBuilder backynetConfigurationBuilder,
-        Action<BackynetPosgresqlServerOptions> configure)
+        Action<BackynetPosgreSqlServerOptions> configure)
     {
         return backynetConfigurationBuilder;
     }

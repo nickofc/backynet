@@ -2,10 +2,10 @@ using Npgsql;
 
 namespace Backynet.Postgresql.Tests;
 
-public class UnitTest1
+public class PostgreSqlConnectionFactoryTests
 {
     [Fact]
-    public async Task Test1()
+    public async Task Should_Connect_To_Database()
     {
         // todo: dodać testcontainers
         const string connectionString = "User ID=postgres;Password=postgres;Host=localhost;Port=5432;Database=postgres";

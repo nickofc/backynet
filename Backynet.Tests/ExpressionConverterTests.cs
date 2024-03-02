@@ -1,9 +1,26 @@
 using System.Linq.Expressions;
+using Backynet.Core;
 
 namespace Backynet.Tests;
 
 public class ExpressionConverterTests
 {
+    [Fact]
+    public void Do()
+    {
+        var arg = "abcde"; 
+        var fakeDto = new FakeDto { Username = "wows" };
+        var instance = new FakeClass();
+        
+        Expression<Func<Task>> expression = ()
+            => instance.FakeMethodAsync(arg, fakeDto);
+        
+        var expressionConverter = new ExpressionConverter();
+        var e = expressionConverter.Serialize(expression);
+
+        Assert.NotNull(e);
+    }
+    
     [Fact]
     public void Test1()
     {
