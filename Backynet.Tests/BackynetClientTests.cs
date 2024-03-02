@@ -5,26 +5,25 @@ namespace Backynet.Tests;
 public class BackynetClientTests
 {
     [Fact]
-    public async Task Unit()
+    public async Task Should_Execute_Job_When_Job_Was_Enqueued()
     {
         var timeout = TimeSpan.FromSeconds(10);
-        var classStub = new ClassStub();
 
         var backynetClient = new BackynetClient();
-        await backynetClient.EnqueueAsync(() => classStub.Execute());
+        await backynetClient.EnqueueAsync(() => FakeClass.FakeSyncMethod());
 
-        if (!ClassStub.WasExecuted.WaitOne(timeout))
+        if (!FakeClass.WasExecuted.WaitOne(timeout))
         {
             Assert.Fail("Timeout");
         }
     }
 
-    public class ClassStub
+    private class FakeClass
     {
-        public static readonly EventWaitHandle WasExecuted 
+        public static readonly EventWaitHandle WasExecuted
             = new ManualResetEvent(false);
 
-        public void Execute()
+        public static void FakeSyncMethod()
         {
             WasExecuted.Set();
         }

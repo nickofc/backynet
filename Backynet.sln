@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backynet.Core", "Backynet.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backynet.AspNetCore", "Backynet.AspNetCore\Backynet.AspNetCore.csproj", "{E93AD1A4-B7F6-48CD-995E-42623B43B16C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkerService1", "example\WorkerService1\WorkerService1.csproj", "{A0AE8729-F92C-4FC9-8FB2-3D9E052F2DE5}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backynet.PostgreSql", "Backynet.Postgresql\Backynet.PostgreSql.csproj", "{6477B7E5-4BAC-48C3-82C0-F6D4DEEB3D4B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backynet.Tests", "Backynet.Tests\Backynet.Tests.csproj", "{3128E2F7-8613-44F8-B640-882A1F79D9AA}"
@@ -32,10 +30,6 @@ Global
 		{E93AD1A4-B7F6-48CD-995E-42623B43B16C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E93AD1A4-B7F6-48CD-995E-42623B43B16C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E93AD1A4-B7F6-48CD-995E-42623B43B16C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A0AE8729-F92C-4FC9-8FB2-3D9E052F2DE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A0AE8729-F92C-4FC9-8FB2-3D9E052F2DE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A0AE8729-F92C-4FC9-8FB2-3D9E052F2DE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A0AE8729-F92C-4FC9-8FB2-3D9E052F2DE5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6477B7E5-4BAC-48C3-82C0-F6D4DEEB3D4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6477B7E5-4BAC-48C3-82C0-F6D4DEEB3D4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6477B7E5-4BAC-48C3-82C0-F6D4DEEB3D4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
