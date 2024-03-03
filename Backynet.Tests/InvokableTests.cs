@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
-using System.Text.Json;
 using Backynet.Core;
+using Newtonsoft.Json;
 
 namespace Backynet.Tests;
 
@@ -31,11 +31,19 @@ public class InvokableTests
         Expression<Func<Task>> expression = () => FakeAsyncMethod(valueTypeArgument, classArgument);
         var expectedInvokable = Invokable.GetFromExpression(expression);
 
-        var payload = JsonSerializer.Serialize(expectedInvokable);
-        var actualInvokable = JsonSerializer.Deserialize<Invokable>(payload);
-        
+        // todo: uzyć wydajnego serializera
+
+        var settings = new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.Auto
+        };
+
+        var payload = JsonConvert.SerializeObject(expectedInvokable, settings);
+        var actualInvokable = JsonConvert.DeserializeObject<Invokable>(payload, settings);
+
         Assert.Equal(expectedInvokable.Method, actualInvokable.Method);
-        Assert.Equal(expectedInvokable.Arguments, actualInvokable.Arguments);
+        Assert.Equal(expectedInvokable.Arguments[0], Convert.ToInt32(actualInvokable.Arguments[0]));
+        Assert.Equal(expectedInvokable.Arguments[1], actualInvokable.Arguments[1]);
     }
 
     private static Task FakeAsyncMethod(int fakeArg1, FakeDto fakeArg2)
