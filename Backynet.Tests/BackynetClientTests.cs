@@ -12,10 +12,11 @@ public class BackynetClientTests
         timeout.CancelAfter(TimeSpan.FromSeconds(10));
 
         const string connectionString = "User ID=postgres;Password=postgres;Host=localhost;Port=5432;Database=postgres";
-        
+
         var factory = new NpgsqlConnectionFactory(connectionString);
-        var repository = new PostgreSqlRepository(factory);
-        
+        var serializer = new DefaultJsonSerializer();
+        var repository = new PostgreSqlRepository(factory, serializer);
+
         var backynetClient = new BackynetClient(repository);
         await backynetClient.EnqueueAsync(() => FakeSyncMethod(), CancellationToken.None);
 
