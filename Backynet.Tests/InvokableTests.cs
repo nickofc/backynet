@@ -26,7 +26,7 @@ public class InvokableTests
     public void Should_Serialize_Invokable()
     {
         var valueTypeArgument = 997;
-        var classArgument = new FakeDto { Username = "Antoni" };
+        var classArgument = new FakeDto { Username = "Antoni", Age = 33 };
 
         Expression<Func<Task>> expression = () => FakeAsyncMethod(valueTypeArgument, classArgument);
         var expectedInvokable = Invokable.GetFromExpression(expression);
@@ -42,6 +42,7 @@ public class InvokableTests
         var actualInvokable = JsonConvert.DeserializeObject<Invokable>(payload, settings);
 
         Assert.Equal(expectedInvokable.Method, actualInvokable.Method);
+        // https://stackoverflow.com/a/9444519/6210759
         Assert.Equal(expectedInvokable.Arguments[0], Convert.ToInt32(actualInvokable.Arguments[0]));
         Assert.Equal(expectedInvokable.Arguments[1], actualInvokable.Arguments[1]);
     }
@@ -58,5 +59,6 @@ public class InvokableTests
     private record FakeDto
     {
         public string Username { get; set; }
+        public int Age { get; set; }
     }
 }

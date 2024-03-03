@@ -2,7 +2,7 @@ using System.Linq.Expressions;
 
 namespace Backynet.Core;
 
-internal class Invokable
+public class Invokable
 {
     public string BaseType {get; }
     public string Method { get; }
