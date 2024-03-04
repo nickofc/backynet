@@ -1,3 +1,4 @@
+using Backynet.Core;
 using Backynet.Core.Abstraction;
 
 namespace Backynet.Postgresql.Tests;
@@ -12,7 +13,8 @@ public class PostgresRepositoryTests
         var job = Job.Create();
 
         var factory = new NpgsqlConnectionFactory(connectionString);
-        var repository = new PostgreSqlRepository(factory);
+        var serializer = new DefaultJsonSerializer();
+        var repository = new PostgreSqlRepository(factory, serializer);
 
         await repository.Add(job);
     }

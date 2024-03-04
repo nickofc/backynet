@@ -1,11 +1,10 @@
 using Backynet.Core;
 using Backynet.Core.Abstraction;
-using Newtonsoft.Json;
 using Npgsql;
 
 namespace Backynet.Postgresql;
 
-internal class PostgreSqlRepository : IStorage
+internal class PostgreSqlRepository : IStorage, IStorageListener
 {
     private readonly NpgsqlConnectionFactory _npgsqlConnectionFactory;
     private readonly ISerializer _serializer;
@@ -28,5 +27,23 @@ internal class PostgreSqlRepository : IStorage
         command.Parameters.Add(new NpgsqlParameter("invokable", _serializer.Serialize(job.Invokable)));
 
         await command.ExecuteNonQueryAsync(cancellationToken);
+    }
+
+    public event EventHandler OnItemAdded;
+
+    public async Task Start(CancellationToken cancellationToken)
+    {
+        await using var connection = await _npgsqlConnectionFactory.GetAsync(cancellationToken);
+        connection.Notification += (_, _) => { OnItemAdded.Invoke(this, EventArgs.Empty); };
+
+        await using (var command = new NpgsqlCommand("LISTEN channel", connection))
+        {
+            await command.ExecuteNonQueryAsync(cancellationToken);
+        }
+
+        while (true)
+        {
+            await connection.WaitAsync(cancellationToken);
+        }
     }
 }
