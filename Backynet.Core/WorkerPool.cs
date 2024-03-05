@@ -11,11 +11,14 @@ public class WorkerPool
         TaskCount = taskCount;
     }
 
-    public async Task Start()
-    {
-        var tasks = new List<Task>(TaskCount);
+    private CancellationTokenSource _cts;
+    private Task _task;
 
-        // https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/task-parallel-library-tpl 
-        // doczytać czy tpl/channel?
+    public async Task Start(CancellationToken cancellationToken)
+    {
+    }
+
+    public async Task Stop()
+    {
     }
 }
