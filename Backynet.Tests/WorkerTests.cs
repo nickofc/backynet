@@ -38,6 +38,6 @@ public class WorkerTests
         await channel.Writer.WriteAsync("hello-world");
         await worker.Start();
 
-        await worker.Stop(default);
+        await worker.Stop();
     }
 }

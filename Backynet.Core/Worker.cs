@@ -26,6 +26,8 @@ public sealed class Worker<T>
         _cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         _mainTask = StartCore(_cts.Token);
 
+        _mainTask.ContinueWith(_ => ReleaseResources(), cancellationToken);
+
         return _mainTask.IsCompleted ? _mainTask : Task.CompletedTask;
     }
 
@@ -57,10 +59,29 @@ public sealed class Worker<T>
         }
         catch (OperationCanceledException e)
         {
-            if (e.CancellationToken != _cts.Token)
+            if (e.CancellationToken == cancellationToken)
             {
                 throw;
             }
+        }
+        finally
+        {
+            ReleaseResources();
+        }
+    }
+
+    private void ReleaseResources()
+    {
+        if (_mainTask != null)
+        {
+            _mainTask.Dispose();
+            _mainTask = null;
+        }
+
+        if (_cts != null)
+        {
+            _cts.Dispose();
+            _cts = null;
         }
     }
 }
