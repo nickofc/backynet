@@ -64,10 +64,6 @@ public sealed class Worker<T>
                 throw;
             }
         }
-        finally
-        {
-            ReleaseResources();
-        }
     }
 
     private void ReleaseResources()

@@ -40,4 +40,35 @@ public class WorkerTests
 
         await worker.Stop();
     }
+
+    [Fact]
+    public async Task Should_Throw_Exception_When_Provided_Cancellation_Token_Is_Cancelled()
+    {
+        const string data = "hello-world";
+
+        var channel = Channel.CreateBounded<string>(1);
+        await channel.Writer.WriteAsync(data);
+
+        var worker = new Worker<string>(channel.Reader, (_, _) => Task.Delay(-1, CancellationToken.None));
+        await worker.Start();
+
+        using var cts = new CancellationTokenSource();
+        cts.CancelAfter(TimeSpan.FromSeconds(1));
+
+        await Assert.ThrowsAsync<TaskCanceledException>(async () => { await worker.Stop(cts.Token); });
+    }
+
+    [Fact(Timeout = 1000)]
+    public async Task Should_Cancel_Internal_Token_When_Stop_Is_Called()
+    {
+        const string data = "hello-world";
+
+        var channel = Channel.CreateBounded<string>(1);
+        await channel.Writer.WriteAsync(data);
+
+        var worker = new Worker<string>(channel.Reader, (_, cancellationToken) => Task.Delay(-1, cancellationToken));
+        await worker.Start();
+
+        await worker.Stop(CancellationToken.None);
+    }
 }
