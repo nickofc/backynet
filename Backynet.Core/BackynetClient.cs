@@ -12,16 +12,9 @@ internal sealed class BackynetClient : IBackynetClient
         _storage = storage;
     }
 
-    public async Task<string> EnqueueAsync(Expression<Func<Task>> call, CancellationToken cancellationToken = default)
+    public async Task<string> EnqueueAsync(Expression<Func<Task>> expression, CancellationToken cancellationToken = default)
     {
-        var job = new Job
-        {
-            Id = Guid.NewGuid(),
-            JobState = JobState.Created,
-            CreatedAt = DateTimeOffset.UtcNow,
-            Invokable = Invokable.GetFromExpression(call)
-        };
-        
+        var job = Job.Create(expression);
         await _storage.Add(job, cancellationToken);
         return job.Id.ToString();
     }

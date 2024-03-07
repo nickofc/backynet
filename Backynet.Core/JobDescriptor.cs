@@ -1,26 +1,27 @@
 using System.Linq.Expressions;
+using Backynet.Core.Abstraction;
 
 namespace Backynet.Core;
 
-public class Invokable
+public readonly struct JobDescriptor : IJobDescriptor
 {
-    public string BaseType {get; }
+    public string BaseType { get; }
     public string Method { get; }
-    public IReadOnlyList<object> Arguments { get; }
+    public object[] Arguments { get; }
 
-    public Invokable(string baseType, string method, IReadOnlyList<object> arguments)
+    public JobDescriptor(string baseType, string method, object[] arguments)
     {
         BaseType = baseType;
         Method = method;
         Arguments = arguments;
     }
 
-    public static Invokable GetFromExpression(Expression<Func<Task>> s)
+    public static JobDescriptor Empty()
     {
-        return GetFromExpression((Expression)s);
+        return CreateFromExpression(() => EmptyMethod.Empty());
     }
 
-    public static Invokable GetFromExpression(Expression expression)
+    public static JobDescriptor CreateFromExpression(Expression expression)
     {
         if (expression is not LambdaExpression lambdaExpression)
         {
@@ -40,20 +41,21 @@ public class Invokable
         }
 
         var args = ResolveArgs(methodCallExpression);
-
-        return new Invokable(method.DeclaringType.AssemblyQualifiedName, method.Name, args);
+        return new JobDescriptor(method.DeclaringType.AssemblyQualifiedName, method.Name, args);
     }
 
-    private static IReadOnlyList<object> ResolveArgs(MethodCallExpression body)
+    private static object[] ResolveArgs(MethodCallExpression body)
     {
-        var values = new List<object>(body.Arguments.Count);
+        var values = new object[body.Arguments.Count];
 
-        foreach (var argument in body.Arguments)
+        for (var i = 0; i < body.Arguments.Count; i++)
         {
+            var argument = body.Arguments[i];
+
             var expression = ResolveMemberExpression(argument);
             var value = GetValue(expression);
 
-            values.Add(value);
+            values[i] = value;
         }
 
         return values;
@@ -92,5 +94,13 @@ public class Invokable
         }
 
         throw new NotImplementedException();
+    }
+
+    public static class EmptyMethod
+    {
+        public static Task Empty()
+        {
+            return Task.CompletedTask;
+        }
     }
 }

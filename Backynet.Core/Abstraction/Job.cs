@@ -1,3 +1,5 @@
+using System.Linq.Expressions;
+
 namespace Backynet.Core.Abstraction;
 
 public class Job
@@ -5,17 +7,33 @@ public class Job
     public Guid Id { get; set; }
     public JobState JobState { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
-    
-    // todo: refactor
-    public Invokable Invokable { get; set; }
+    public IJobDescriptor Descriptor { get; set; }
 
-    public static Job Create()
+    public static Job Create(Expression<Func<Task>> expression)
     {
-        return new Job
+        ArgumentNullException.ThrowIfNull(expression);
+
+        var methodMetadata = JobDescriptor.CreateFromExpression(expression);
+        return Create(methodMetadata);
+    }
+
+    public static Job Create(IJobDescriptor jobDescriptor)
+    {
+        ArgumentNullException.ThrowIfNull(jobDescriptor);
+
+        var job = new Job
         {
             Id = Guid.NewGuid(),
             JobState = JobState.Created,
-            CreatedAt = DateTimeOffset.UtcNow
+            CreatedAt = DateTimeOffset.UtcNow,
+            Descriptor = jobDescriptor
         };
+
+        return job;
+    }
+
+    public static Job Empty()
+    {
+        return Create(JobDescriptor.Empty());
     }
 }

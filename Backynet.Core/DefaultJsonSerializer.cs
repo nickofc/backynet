@@ -11,12 +11,13 @@ public class DefaultJsonSerializer : ISerializer
     };
 
     public string Serialize<T>(T instance)
-    { 
+    {
         return JsonConvert.SerializeObject(instance, DefaultJsonSerializerSettings);
     }
 
     public T Deserialize<T>(string payload)
     {
-        return JsonConvert.DeserializeObject<T>(payload, DefaultJsonSerializerSettings);
+        var obj = JsonConvert.DeserializeObject<T>(payload, DefaultJsonSerializerSettings);
+        return obj == null ? throw new InvalidOperationException() : obj;
     }
 }

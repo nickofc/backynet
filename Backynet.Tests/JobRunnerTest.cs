@@ -1,9 +1,10 @@
 using System.Linq.Expressions;
 using Backynet.Core;
+using Backynet.Core.Abstraction;
 
 namespace Backynet.Tests;
 
-public class InvokableExecuteTest
+public class JobRunnerTest
 {
     [Fact]
     public async Task Should_Execute_Invokable()
@@ -12,16 +13,16 @@ public class InvokableExecuteTest
         var referenceTypeArgument = new FakeDto { Username = "Antoni" };
 
         Expression<Func<Task>> expression = () => FakeAsyncMethod(valueTypeArgument, referenceTypeArgument);
-        var invokable = Invokable.GetFromExpression(expression);
+        var job = Job.Create(expression);
 
-        var invokableExecute = new InvokableExecute();
-        await invokableExecute.ExecuteAsync(invokable);
-        
+        var jobRunner = new JobRunner();
+        await jobRunner.RunAsync(job.Descriptor);
+
         Assert.True(WasExecuted.IsSet);
     }
 
     private static readonly ManualResetEventSlim WasExecuted = new();
-    
+
     private static Task FakeAsyncMethod(int fakeArg1, FakeDto fakeArg2)
     {
         WasExecuted.Set();
