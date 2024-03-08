@@ -2,6 +2,6 @@ namespace Backynet.Core;
 
 public interface IStorageListener
 {
-    event EventHandler OnItemAdded;
+    event EventHandler<string> OnItemAdded;
     Task Start(CancellationToken cancellationToken);
 }

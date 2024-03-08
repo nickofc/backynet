@@ -19,10 +19,12 @@ public static class DependencyInjection
         {
             var options = new BackynetServerOptions();
             configure.Invoke(sp, options);
+            
+            // var server = new BackynetServer(options);
 
-            var server = new BackynetServer(options);
+            // return new BackynetServerHostedService(server);
 
-            return new BackynetServerHostedService(server);
+            throw new NotImplementedException();
         });
 
         return services;
