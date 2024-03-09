@@ -2,7 +2,7 @@ using System.Threading.Channels;
 
 namespace Backynet.Core;
 
-public sealed class Worker<T>
+internal sealed class Worker<T>
 {
     private readonly ChannelReader<T> _channelReader;
     private readonly Func<T, CancellationToken, Task> _function;

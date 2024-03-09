@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Backynet.Core;
 
-public class DefaultJsonSerializer : ISerializer
+internal sealed class DefaultJsonSerializer : ISerializer
 {
     private static readonly JsonSerializerSettings DefaultJsonSerializerSettings = new()
     {

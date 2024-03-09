@@ -1,4 +1,4 @@
-namespace Backynet.Core;
+namespace Backynet.Core.Abstraction;
 
 public interface IThreadPool
 {

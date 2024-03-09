@@ -2,7 +2,7 @@ using System.Threading.Channels;
 
 namespace Backynet.Core;
 
-public class WorkerPool<T>
+internal sealed class WorkerPool<T>
 {
     public int TaskCount { get; }
     public Func<T, CancellationToken, Task> Callback { get; }

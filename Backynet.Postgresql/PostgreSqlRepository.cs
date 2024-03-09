@@ -4,7 +4,7 @@ using Npgsql;
 
 namespace Backynet.Postgresql;
 
-internal class PostgreSqlRepository : IStorage, IStorageListener
+internal class PostgreSqlRepository : IStorage
 {
     private readonly NpgsqlConnectionFactory _npgsqlConnectionFactory;
     private readonly ISerializer _serializer;
@@ -63,23 +63,5 @@ internal class PostgreSqlRepository : IStorage, IStorageListener
         }
         
         return job;
-    }
-
-    public event EventHandler<string> OnItemAdded;
-
-    public async Task Start(CancellationToken cancellationToken)
-    {
-        await using var connection = await _npgsqlConnectionFactory.GetAsync(cancellationToken);
-        connection.Notification += (_, a) => { OnItemAdded.Invoke(this, a.Channel); };
-
-        await using (var command = new NpgsqlCommand("LISTEN channel", connection))
-        {
-            await command.ExecuteNonQueryAsync(cancellationToken);
-        }
-
-        while (true)
-        {
-            await connection.WaitAsync(cancellationToken);
-        }
     }
 }

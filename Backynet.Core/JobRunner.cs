@@ -3,7 +3,7 @@ using Backynet.Core.Abstraction;
 
 namespace Backynet.Core;
 
-internal class JobRunner
+internal sealed class JobRunner
 {
     // TODO: ioc
     // TODO: cache?

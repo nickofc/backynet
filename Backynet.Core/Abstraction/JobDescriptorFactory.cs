@@ -1,26 +1,9 @@
 using System.Linq.Expressions;
-using Backynet.Core.Abstraction;
 
-namespace Backynet.Core;
+namespace Backynet.Core.Abstraction;
 
-public readonly struct JobDescriptor : IJobDescriptor
+public static class JobDescriptorFactory
 {
-    public string BaseType { get; }
-    public string Method { get; }
-    public object[] Arguments { get; }
-
-    public JobDescriptor(string baseType, string method, object[] arguments)
-    {
-        BaseType = baseType;
-        Method = method;
-        Arguments = arguments;
-    }
-
-    public static JobDescriptor Empty()
-    {
-        return CreateFromExpression(() => EmptyMethod.Empty());
-    }
-
     public static JobDescriptor CreateFromExpression(Expression expression)
     {
         if (expression is not LambdaExpression lambdaExpression)
@@ -96,9 +79,9 @@ public readonly struct JobDescriptor : IJobDescriptor
         throw new NotImplementedException();
     }
 
-    public static class EmptyMethod
+    internal static class Empty
     {
-        public static Task Empty()
+        public static Task Method()
         {
             return Task.CompletedTask;
         }

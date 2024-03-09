@@ -13,7 +13,7 @@ public class Job
     {
         ArgumentNullException.ThrowIfNull(expression);
 
-        var methodMetadata = JobDescriptor.CreateFromExpression(expression);
+        var methodMetadata = JobDescriptor.Create(expression);
         return Create(methodMetadata);
     }
 
