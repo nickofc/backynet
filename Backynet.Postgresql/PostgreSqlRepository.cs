@@ -65,12 +65,12 @@ internal class PostgreSqlRepository : IStorage, IStorageListener
         return job;
     }
 
-    public event EventHandler OnItemAdded;
+    public event EventHandler<string> OnItemAdded;
 
     public async Task Start(CancellationToken cancellationToken)
     {
         await using var connection = await _npgsqlConnectionFactory.GetAsync(cancellationToken);
-        connection.Notification += (_, _) => { OnItemAdded.Invoke(this, EventArgs.Empty); };
+        connection.Notification += (_, a) => { OnItemAdded.Invoke(this, a.Channel); };
 
         await using (var command = new NpgsqlCommand("LISTEN channel", connection))
         {
