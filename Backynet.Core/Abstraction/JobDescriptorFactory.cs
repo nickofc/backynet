@@ -6,6 +6,8 @@ public static class JobDescriptorFactory
 {
     public static JobDescriptor CreateFromExpression(Expression expression)
     {
+        // todo: cache
+
         if (expression is not LambdaExpression lambdaExpression)
         {
             throw new InvalidOperationException("Expression must be LambdaExpression.");
