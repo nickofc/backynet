@@ -29,4 +29,30 @@ public class PostgresRepositoryTests
         Assert.Equal(expectedJob.Descriptor.Method, actualJob.Descriptor.Method);
         Assert.Equal(expectedJob.Descriptor.Arguments, actualJob.Descriptor.Arguments);
     }
+
+    [Fact]
+    public async Task Should_Acquire_Job_When_Acquire_Is_Called()
+    {
+        // arrange
+
+        var serverName = Guid.NewGuid().ToString();
+        var factory = new NpgsqlConnectionFactory(TestContext.ConnectionString);
+        var serializer = new DefaultJsonSerializer();
+        var repository = new PostgreSqlRepository(factory, serializer);
+
+        for (var i = 0; i < 10; i++)
+        {
+            var emptyJob = Job.Empty();
+            await repository.Add(emptyJob);
+        }
+
+        //act 
+
+        var jobs = await repository.Acquire(serverName, 2);
+
+        // assert
+
+        Assert.Equal(2, jobs.Count);
+        Assert.True(jobs.All(x => x.ServerName == serverName));
+    }
 }

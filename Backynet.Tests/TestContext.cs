@@ -1,4 +1,4 @@
-namespace Backynet.Postgresql.Tests;
+namespace Backynet.Tests;
 
 public static class TestContext
 {

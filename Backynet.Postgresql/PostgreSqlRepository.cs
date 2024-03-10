@@ -20,8 +20,8 @@ internal class PostgreSqlRepository : IStorage
         await using var command = new NpgsqlCommand();
         command.Connection = connection;
         command.CommandText = """
-                              insert into jobs (id, state, created_at, base_type, method, arguments)
-                              values (@id, @state, @created_at, @base_type, @method, @arguments);
+                              insert into jobs (id, state, created_at, base_type, method, arguments, server_name)
+                              values (@id, @state, @created_at, @base_type, @method, @arguments, @server_name);
                               notify jobs_add, '@id';
                               """;
         command.Parameters.Add(new NpgsqlParameter("id", job.Id));
@@ -30,6 +30,8 @@ internal class PostgreSqlRepository : IStorage
         command.Parameters.Add(new NpgsqlParameter("base_type", job.Descriptor.BaseType));
         command.Parameters.Add(new NpgsqlParameter("method", job.Descriptor.Method));
         command.Parameters.Add(new NpgsqlParameter("arguments", _serializer.Serialize(job.Descriptor.Arguments)));
+        command.Parameters.Add(new NpgsqlParameter("server_name",
+            string.IsNullOrEmpty(job.ServerName) ? DBNull.Value : job.ServerName));
         await command.ExecuteNonQueryAsync(cancellationToken);
     }
 
@@ -38,8 +40,10 @@ internal class PostgreSqlRepository : IStorage
         await using var connection = await _npgsqlConnectionFactory.GetAsync(cancellationToken);
         await using var command = new NpgsqlCommand();
         command.Connection = connection;
-        command.CommandText = "select id, state, created_at, base_type, method, arguments " +
-                              "from jobs where id = @id";
+        command.CommandText = """
+                              select id, state, created_at, base_type, method, arguments, server_name
+                              from jobs where id = @id
+                              """;
         command.Parameters.Add(new NpgsqlParameter("id", jobId));
 
         await using var reader = await command.ExecuteReaderAsync(cancellationToken);
@@ -68,7 +72,7 @@ internal class PostgreSqlRepository : IStorage
                                                where jobs.server_name is null
                                                order by id
                                                limit @limit)
-                              RETURNING *
+                              RETURNING id, state, created_at, base_type, method, arguments, server_name
                               """;
         command.Parameters.Add(new NpgsqlParameter("server_name", serverName));
         command.Parameters.Add(new NpgsqlParameter("limit", count));
@@ -95,12 +99,20 @@ internal class PostgreSqlRepository : IStorage
         var method = reader.GetString(4);
         var arguments = _serializer.Deserialize<object[]>(reader.GetString(5));
 
+        string? serverName = null;
+
+        if (!reader.IsDBNull(6))
+        {
+            serverName = reader.GetString(6);
+        }
+
         return new Job
         {
             Id = id,
             JobState = (JobState)state,
             CreatedAt = created,
-            Descriptor = new JobDescriptor(baseType, method, arguments)
+            Descriptor = new JobDescriptor(baseType, method, arguments),
+            ServerName = serverName
         };
     }
 }
