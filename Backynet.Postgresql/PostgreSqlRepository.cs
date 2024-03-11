@@ -25,7 +25,7 @@ internal class PostgreSqlRepository : IStorage
                               notify jobs_add, '@id';
                               """;
         command.Parameters.Add(new NpgsqlParameter("id", job.Id));
-        command.Parameters.Add(new NpgsqlParameter("state", (int)job.JobState));
+        command.Parameters.Add(new NpgsqlParameter("state", (int)job.JobState)); // todo: remove boxing
         command.Parameters.Add(new NpgsqlParameter("created_at", job.CreatedAt));
         command.Parameters.Add(new NpgsqlParameter("base_type", job.Descriptor.BaseType));
         command.Parameters.Add(new NpgsqlParameter("method", job.Descriptor.Method));
@@ -75,7 +75,7 @@ internal class PostgreSqlRepository : IStorage
                               RETURNING id, state, created_at, base_type, method, arguments, server_name
                               """;
         command.Parameters.Add(new NpgsqlParameter("server_name", serverName));
-        command.Parameters.Add(new NpgsqlParameter("limit", count));
+        command.Parameters.Add(new NpgsqlParameter<int>("limit", count));
 
         await using var reader = await command.ExecuteReaderAsync(cancellationToken);
         var jobs = new List<Job>((int)reader.Rows);
