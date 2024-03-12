@@ -18,18 +18,36 @@ internal sealed class BackynetServer : IBackynetServer
         // wykonaj select (where serverId = null) & update (serverId = currentServerId) do jakiego serwera jest przypisany
 
         // trzeba zrobic jakas kolejke? 
-        // moze byc sytuacja ze workery sa w uzyciu i nie będzie mozna wykonac danego joba a inny serwer moze bedzie wolny
+        
     }
 
     private async Task Callback(object arg)
     {
         var jobId = Guid.Parse((string)arg);
 
+/* TODO:
+
+Co trzeba dodać do jobów? 
+
+    1. cron i planowanie zadan 
+    2. grupy i konfiguracja ile workerów w tym samym czasie może pracować dla jednej grupy
+
+
+Jak rozwiązać? 
+
+    1. moze byc sytuacja ze workery sa w uzyciu i nie będzie mozna wykonac danego joba a inny serwer moze bedzie wolny
+    2. jak rozwiazac problem z jobami ktore byly wykonywane na jakims serwerze ktory zostal wylaczony? 
+    3. jak zaplanować joby?
+    4. jak zaplanowac joby rekurenyjne?
+    5. jak ograniczyć workery dla grupy?
+    
+    ofc z naciskiem na wydajność 
+
+*/
+        
         // sprawdź czy mozna wykonac od razu
         // jezeli nie dodaj do kolejki i sprawdz gdy jakis worker/serwer będzie wolny
-
-        // jak rozwiazac problem z jobami ktore byly wykonywane na jakims serwerze ktory zostal wylaczony? 
-
+        
         if (await IsWorkerAvailable())
         {
             if (await TryAcquire(jobId))
