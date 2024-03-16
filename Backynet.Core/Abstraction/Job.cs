@@ -8,10 +8,11 @@ public class Job
     public JobState JobState { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public IJobDescriptor Descriptor { get; set; }
-
-    // todo: osobna klasa? 
     public string? ServerName { get; set; }
-    
+    public string? Cron { get; set; }
+    public string? GroupName { get; set; }
+    public DateTimeOffset? NextOccurrenceAt { get; set; }
+
     public static Job Create(Expression<Func<Task>> expression)
     {
         ArgumentNullException.ThrowIfNull(expression);
