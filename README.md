@@ -17,3 +17,6 @@ Jak rozwiązać?
     5. jak ograniczyć workery dla grupy?
 
     ofc z naciskiem na wydajność
+
+
+czytam jak napisac parser
