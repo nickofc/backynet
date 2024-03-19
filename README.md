@@ -20,3 +20,4 @@ Jak rozwiązać?
 
 
 czytam jak napisac parser
+przeziębienie :(
