@@ -1,6 +1,6 @@
 namespace Backynet.Core.Abstraction;
 
-public ref struct Cron
+public readonly ref struct Cron
 {
     private readonly int _second;
     private readonly int _minute;
@@ -19,7 +19,7 @@ public ref struct Cron
         _dayOfWeek = dayOfWeek;
     }
 
-    public static Cron Parse(ReadOnlySpan<char> expression, CronType cronType = CronType.Standard)
+    public static Cron Parse(ReadOnlySpan<char> input, CronType cronType = CronType.Standard)
     {
         if (cronType == CronType.Extended)
         {
@@ -32,19 +32,36 @@ public ref struct Cron
         var dayOfMonth = 0;
         var month = 0;
         var dayOfWeek = 0;
-
         var position = 0;
 
-        while (char.IsWhiteSpace(expression[position]))
+        return new Cron();
+    }
+
+    private static ReadOnlySpan<char> GetNextSegment(ref ReadOnlySpan<char> input, ref int position)
+    {
+        while (position < input.Length && input[position] == ' ')
         {
             position++;
         }
 
-        return new Cron();
+        var start = position;
+
+        while (position < input.Length && input[position] != ' ')
+        {
+            position++;
+        }
+
+        return input.Slice(start, position - start);
     }
 
     public DateTimeOffset GetNextOccurrence(DateTimeOffset now)
     {
         return now;
+    }
+    
+    
+    public struct CronField
+    {
+    
     }
 }

@@ -32,4 +32,11 @@ public class CronTests
             Assert.Equal(0, survivedObjects.ObjectsCount);
         });
     }
+
+    [Fact]
+    public void Should_Parse()
+    {
+        var cron = Cron.Parse("30 * * * *");
+        cron.GetNextOccurrence(_now);
+    }
 }
