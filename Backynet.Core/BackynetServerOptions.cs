@@ -14,8 +14,21 @@ internal sealed class BackynetServerOptions
         }
     }
 
+    private string _serverName;
+
+    public string ServerName
+    {
+        get => _serverName;
+        set
+        {
+            ArgumentException.ThrowIfNullOrEmpty(value);
+            _serverName = value;
+        }
+    }
+
     public BackynetServerOptions()
     {
         MaxThreads = Environment.ProcessorCount;
+        ServerName = Environment.MachineName;
     }
 }

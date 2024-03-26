@@ -15,7 +15,7 @@ public class BackynetClientTests
         var serializer = new DefaultJsonSerializer();
         var repository = new PostgreSqlRepository(factory, serializer);
 
-        var backynetServer = new BackynetServer(repository);
+        var backynetServer = new BackynetServer(repository, new SimpleJobRunner(), new BackynetServerOptions());
         await backynetServer.Start(CancellationToken.None);
 
         var backynetClient = new BackynetClient(repository);

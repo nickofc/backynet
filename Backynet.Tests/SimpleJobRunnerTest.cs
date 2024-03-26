@@ -4,7 +4,7 @@ using Backynet.Core.Abstraction;
 
 namespace Backynet.Tests;
 
-public class JobRunnerTest
+public class SimpleJobRunnerTest
 {
     [Fact]
     public async Task Should_Execute_Invokable()
@@ -15,8 +15,8 @@ public class JobRunnerTest
         Expression<Func<Task>> expression = () => FakeAsyncMethod(valueTypeArgument, referenceTypeArgument);
         var job = Job.Create(expression);
 
-        var jobRunner = new JobRunner();
-        await jobRunner.RunAsync(job.Descriptor);
+        var jobRunner = new SimpleJobRunner();
+        await jobRunner.Run(job);
 
         Assert.True(WasExecuted.IsSet);
     }

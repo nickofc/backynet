@@ -1,4 +1,3 @@
-using System.Transactions;
 using Backynet.Core.Abstraction;
 
 namespace Backynet.Core;
@@ -6,34 +5,35 @@ namespace Backynet.Core;
 internal sealed class BackynetServer : IBackynetServer
 {
     private readonly IStorage _storage;
+    private readonly IJobRunner _jobRunner;
+    private readonly BackynetServerOptions _backynetServerOptions;
 
-    public BackynetServer(IStorage storage)
+    public BackynetServer(IStorage storage, IJobRunner jobRunner, BackynetServerOptions backynetServerOptions)
     {
         _storage = storage;
+        _jobRunner = jobRunner;
+        _backynetServerOptions = backynetServerOptions;
     }
 
     public  Task Start(CancellationToken cancellationToken)
     {
-        var t = StartCore(cancellationToken);
-        return t.IsCompleted ? t : Task.CompletedTask;
+        var task = StartCore(cancellationToken);
+        return task.IsCompleted ? task : Task.CompletedTask;
     }
 
     private async Task StartCore(CancellationToken cancellationToken)
     {
-        var serverName = "Admin-PC";
-        var jobRunner = new JobRunner();
-
         while (true)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var jobs = await _storage.Acquire(serverName, 1, cancellationToken);
+            var jobs = await _storage.Acquire(_backynetServerOptions.ServerName, 1, cancellationToken);
 
             foreach (var job in jobs)
             {
                 try
                 {
-                    await jobRunner.RunAsync(job.Descriptor);
+                    await _jobRunner.Run(job);
                 }
                 catch (Exception e)
                 {
