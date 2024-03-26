@@ -25,8 +25,8 @@ public readonly ref struct Cron
 
         var reader = new CronReader(input);
 
-        var minutesField = new MinutesField(reader.GetNextSegment());
-        var hoursField = new HoursField(reader.GetNextSegment());
+        var minutesField = new MinutesField(reader.GetNextField());
+        var hoursField = new HoursField(reader.GetNextField());
 
         return new Cron(minutesField, hoursField);
     }
@@ -66,7 +66,7 @@ public readonly ref struct Cron
 
         private int _position = 0;
 
-        public Segment GetNextSegment()
+        public Field GetNextField()
         {
             while (_position < _input.Length && _input[_position] == ' ')
             {
@@ -80,56 +80,69 @@ public readonly ref struct Cron
                 _position++;
             }
 
-            return new Segment(_input.Slice(start, _position - start));
+            return new Field(_input.Slice(start, _position - start));
         }
     }
 
-    private ref struct Segment
+    private ref struct Field
     {
         public ReadOnlySpan<char> Value { get; }
+        public bool IsEmpty { get; }
 
-        public Segment(ReadOnlySpan<char> value)
+        public Field(ReadOnlySpan<char> value)
         {
             Value = value;
+            IsEmpty = value.Length == 0;
+        }
+
+        public void Read()
+        {
+            Span<Range> range = stackalloc Range[Value.Length];
+            Value.Split(range, ',');
+            
+            // */5,
+            // 1-5,
+            // 5 
         }
     }
 
     private readonly ref struct MinutesField
     {
-        private readonly Segment _segment;
+        private readonly Field _field;
 
-        public MinutesField(Segment segment)
+        public MinutesField(Field field)
         {
-            _segment = segment;
+            _field = field;
         }
 
         public bool IsValid(DateTimeOffset date)
         {
+            Span<Range> range = stackalloc Range[_field.Value.Length];
+            
+            if (_field.Value.Split(range, ',') > 0)
+            {
+                
+            }
+            
+            
+            
             // 	* , - / 
-
-            var isAny = _segment.Value.IndexOf('*');
-            var isList = _segment.Value.IndexOf(',');
-            var isRange = _segment.Value.IndexOf('/');
-
             return false;
         }
 
         public DateTimeOffset GetNext(DateTimeOffset date)
         {
-            Span<Range> s = stackalloc Range[10];
-            var sd = _segment.Value.Split(s, ',');
-
             return date;
         }
     }
 
     private readonly ref struct HoursField
     {
-        private readonly Segment _segment;
+        private readonly Field _field;
 
-        public HoursField(Segment segment)
+        public HoursField(Field field)
         {
-            _segment = segment;
+            _field = field;
         }
 
         public bool IsValid(DateTimeOffset now)

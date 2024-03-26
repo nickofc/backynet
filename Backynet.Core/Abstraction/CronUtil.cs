@@ -4,6 +4,6 @@ public static class CronUtil
 {
     public static TimeSpan GetNextOccurrence(string cron)
     {
-        return TimeSpan.FromDays(1);
+        throw new NotImplementedException();
     }
 }
