@@ -25,7 +25,7 @@ public class BackynetClientTests
         await backynetServer.Start(CancellationToken.None);
 
         var backynetClient = new BackynetClient(repository);
-        await backynetClient.EnqueueAsync(() => Console.WriteLine("hello world"), CancellationToken.None);
+        await backynetClient.EnqueueAsync(() => FakeSyncMethod(), CancellationToken.None);
 
         WasExecuted.Wait(timeout.Token);
     }
@@ -44,16 +44,21 @@ public class BackynetClientTests
         await backynetServer.Start(CancellationToken.None);
 
         var backynetClient = new BackynetClient(repository);
-        await backynetClient.EnqueueAsync(() => FakeSyncMethod(), CancellationToken.None);
+        await backynetClient.EnqueueAsync(() => FakeAsyncMethod(), CancellationToken.None);
 
         WasExecuted.Wait(timeout.Token);
     }
 
     private static readonly ManualResetEventSlim WasExecuted = new();
 
-    private static Task FakeSyncMethod()
+    private static Task FakeAsyncMethod()
     {
         WasExecuted.Set();
         return Task.CompletedTask;
+    }
+
+    private static void FakeSyncMethod()
+    {
+        WasExecuted.Set();
     }
 }

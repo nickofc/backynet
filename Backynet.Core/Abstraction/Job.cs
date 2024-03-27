@@ -13,7 +13,7 @@ public class Job
     public string? GroupName { get; set; }
     public DateTimeOffset? NextOccurrenceAt { get; set; }
 
-    public static Job Create(Expression<Func<Task>> expression)
+    public static Job Create(Expression expression)
     {
         ArgumentNullException.ThrowIfNull(expression);
 

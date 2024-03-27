@@ -1,10 +1,11 @@
 using Backynet.Core;
 using Backynet.Core.Abstraction;
+using Backynet.PostgreSql;
 using Backynet.Tests;
 
 namespace Backynet.Postgresql.Tests;
 
-public class PostgresRepositoryTests
+public class PostgresRepositoryTests : IDisposable, IAsyncDisposable
 {
     [Fact]
     public async Task Should_Insert_Job_To_Database_When_Add_Is_Called()
@@ -44,6 +45,7 @@ public class PostgresRepositoryTests
         for (var i = 0; i < 10; i++)
         {
             var emptyJob = Job.Empty();
+            emptyJob.JobState = JobState.Scheduled;
             await repository.Add(emptyJob);
         }
 
@@ -55,5 +57,17 @@ public class PostgresRepositoryTests
 
         Assert.Equal(2, jobs.Count);
         // Assert.True(jobs.All(x => x.ServerName == serverName));
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        var factory = new NpgsqlConnectionFactory(TestContext.ConnectionString);
+        await using var connection = await factory.GetAsync();
+        await DatabaseExtensions.DeleteAllJobs(connection);
+    }
+
+    public void Dispose()
+    {
+        DisposeAsync().AsTask().Wait();
     }
 }
